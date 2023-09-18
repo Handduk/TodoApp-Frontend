@@ -1,9 +1,14 @@
 import axios from "axios";
-const baseUrl = '${process.env.REACT_APP_API_URL}/api/Todos';
+const baseUrl = `${process.env.REACT_APP_API_URL}/api/Todos`;
 
-export const createTodo = (todo: { title: string; isActive: boolean; }) => {
+export const createTodo = (todo: { title: string; completed: boolean; }) => {
     return axios.post(baseUrl, {
         title: todo.title,
-        isActive: todo.isActive
+        completed: todo.completed
     }).then(response => response.data);
 } 
+
+export const loadTodos = () => {
+    return axios.get(baseUrl)
+    .then(response => response.data);
+}

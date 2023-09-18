@@ -10,7 +10,7 @@ const TodosForm: React.FC<TodosFormProps> = (props) => {
     const onFinish = () => {
         const todo: Todo = {
             title: form.getFieldValue('title'),
-            isActive: false,
+            completed: false,
         };
         onFormSubmit(todo);
         form.resetFields();
