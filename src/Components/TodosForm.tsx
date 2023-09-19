@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button, Col, Form, Input, Row } from "antd";
 import {PlusCircleFilled} from '@ant-design/icons';
-import { Todo } from './Models/todo';
+import { ITodo } from './Models/todo';
 import { TodosFormProps } from './Models/TodosFromProps';
 
 const TodosForm: React.FC<TodosFormProps> = (props) => {
     const [form] = Form.useForm();
     const { onFormSubmit } = props;
     const onFinish = () => {
-        const todo: Todo = {
+        const todo: ITodo = {
             title: form.getFieldValue('title'),
             completed: false,
         };
@@ -27,7 +27,7 @@ const TodosForm: React.FC<TodosFormProps> = (props) => {
                 <Form.Item
                 name="title"
                 rules={[{ required: true, message: "Please enter a title"}]}>
-                    <Input placeholder="What do you need to do=" />
+                    <Input placeholder="What do you need to do?" />
                 </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={7} lg={5} xl={4}>
