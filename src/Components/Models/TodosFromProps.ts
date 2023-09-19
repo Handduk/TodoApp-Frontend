@@ -1,5 +1,5 @@
-import { Todo } from "./todo";
+import { ITodo } from "./todo";
 
 export type TodosFormProps = {
-    onFormSubmit: (todo: Todo) => void;
+    onFormSubmit: (todo: ITodo) => void;
 };

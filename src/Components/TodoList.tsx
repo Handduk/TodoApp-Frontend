@@ -2,7 +2,7 @@ import {Col, Layout, message, Row, Tabs} from 'antd';
 import TodosForm from './TodosForm';
 import { useCallback, useEffect, useState } from 'react';
 import { createTodo, loadTodos } from '../Services/todoServices';
-import { Todo } from './Models/todo';
+import { ITodo } from './Models/todo';
 import TodoTab from './TodoTab';
 
 
@@ -13,7 +13,7 @@ const TodoList = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [todos, setTodos] = useState([]);
 
-    const handleFormSubmit = async (todo : Todo) => {
+    const handleFormSubmit = async (todo : ITodo) => {
         await createTodo(todo);
         onRefresh();
         message.success('Your todo has been added!');
