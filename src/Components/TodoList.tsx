@@ -1,7 +1,7 @@
 import {Col, Layout, message, Row, Tabs} from 'antd';
 import TodosForm from './TodosForm';
 import { useCallback, useEffect, useState } from 'react';
-import { createTodo, loadTodos } from '../Services/todoServices';
+import { createTodo, loadTodos, updateTodoStatus } from '../Services/todoServices';
 import { ITodo } from './Models/todo';
 import TodoTab from './TodoTab';
 
@@ -18,6 +18,18 @@ const TodoList = () => {
         onRefresh();
         message.success('Your todo has been added!');
     }
+
+    const handleToggleTodoStatus = async (todo: ITodo) => {
+        todo.completed = !todo.completed;
+        try{
+            await updateTodoStatus(todo);
+            refresh();
+            message.success(`Your todo is now ${todo.completed ? "completed!" : "incomplete"}`);
+            return todo;
+        } catch(error) {
+            console.error(error);
+        }
+    };
 
     const onRefresh = useCallback( async () => {
         setRefreshing(true);
@@ -46,7 +58,7 @@ const TodoList = () => {
                             <br />
                             <Tabs defaultActiveKey="all">
                                 <TabPane tab="All" key="all">
-                                <TodoTab todos={todos} />
+                                <TodoTab todos={todos} onTodoToggle = {handleToggleTodoStatus}/>
                                 </TabPane>
                             </Tabs>
                         </Col>
