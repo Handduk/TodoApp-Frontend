@@ -1,7 +1,7 @@
 import {Col, Layout, message, Row, Tabs} from 'antd';
 import TodosForm from './TodosForm';
 import { useCallback, useEffect, useState } from 'react';
-import { createTodo, loadTodos, updateTodoStatus } from '../Services/todoServices';
+import { createTodo, loadTodos, updateTodoStatus, deleteTodo } from '../Services/todoServices';
 import { ITodo } from './Models/todo';
 import TodoTab from './TodoTab';
 
@@ -29,7 +29,16 @@ const TodoList = () => {
         } catch(error) {
             console.error(error);
         }
-    };
+    }
+
+    const handleRemoveTodo = async (todo: ITodo) => {
+        
+        if (typeof todo.id !== "undefined" && "id" in todo) {
+            await deleteTodo(todo.id);
+            onRefresh();
+            message.warning(`the todo ${todo.title} was deleted`);
+        } 
+    }
 
     const onRefresh = useCallback( async () => {
         setRefreshing(true);
@@ -58,7 +67,7 @@ const TodoList = () => {
                             <br />
                             <Tabs defaultActiveKey="all">
                                 <TabPane tab="All" key="all">
-                                <TodoTab todos={todos} onTodoToggle = {handleToggleTodoStatus}/>
+                                <TodoTab todos={todos} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
                                 </TabPane>
                             </Tabs>
                         </Col>
