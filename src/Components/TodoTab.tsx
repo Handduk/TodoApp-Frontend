@@ -2,7 +2,7 @@ import { List } from 'antd';
 import TodoItem from './TodoItem';
 import { TodoTabProps } from './Models/TodoTabProps';
 
-const TodosTab = ({todos, onTodoToggle}: TodoTabProps) => {
+const TodosTab = ({todos, onTodoToggle, onTodoRemoval}: TodoTabProps) => {
     return (
         <>
         <List
@@ -12,6 +12,7 @@ const TodosTab = ({todos, onTodoToggle}: TodoTabProps) => {
                 return <TodoItem
                     todo={todo}
                     onTodoToggle={onTodoToggle}
+                    onTodoRemoval={onTodoRemoval}
                 />
             }}
             pagination={{

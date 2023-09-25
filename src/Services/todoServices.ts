@@ -20,8 +20,7 @@ export const updateTodoStatus = (todo : ITodo) => {
     }).then(response => response.data);
 };
 
-export const deleteTodoStatus = (todo: ITodo) => {
-    console.log("deleteTodoStatus was executed");
-    return axios.delete(baseUrl + `/${todo.id}`)
+export const deleteTodo = (id: number) => {
+    return axios.delete(baseUrl + `/${id}`)
     .then(response => response.data);
 };

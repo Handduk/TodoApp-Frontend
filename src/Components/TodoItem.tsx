@@ -1,34 +1,8 @@
-import { useState } from "react";
-import { Tag, List, Switch, message, Button, Tooltip } from "antd";
-import { CheckOutlined, CloseOutlined, DeleteOutlined, MessageOutlined } from "@ant-design/icons";
+import { Tag, List, Switch, Button, Tooltip, Popconfirm } from "antd";
+import { CheckOutlined, CloseOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TodoProps } from "./Models/TodoProps";
-import { deleteTodoStatus, loadTodos, updateTodoStatus } from "../Services/todoServices";
-import { ITodo } from "./Models/todo";
 
-const Todo = ({todo, onTodoToggle}: TodoProps) => {
-    const [todos, setTodos] = useState([]);
-    
-    const refresh =async () => {
-        await loadTodos()
-        .then (json => {
-            setTodos(json);
-        });
-    }
-
-    
-
-    const deleteStatus = async (todo: ITodo) => {
-        
-        console.log("deleteStatus function called");
-        try {
-            await deleteTodoStatus(todo);
-            message.success(`The todo ${todo.title} was deleted.`);
-            refresh();
-        } catch(error) {
-            console.error(error);
-        } 
-    };
-
+const Todo = ({todo, onTodoToggle, onTodoRemoval}: TodoProps) => {
     return(
         <List.Item
 
@@ -41,7 +15,20 @@ const Todo = ({todo, onTodoToggle}: TodoProps) => {
                         onChange={() => onTodoToggle(todo)}
                         defaultChecked={todo.completed}
                         />
-                </Tooltip>  
+                </Tooltip>,
+                <Popconfirm
+                title={"Do you really want to delete?"}
+                onConfirm={() => {
+                    onTodoRemoval(todo);
+                }}>
+                <Button 
+                className="todo-Delete"
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+                />
+                </Popconfirm>  
         ]}
 
         className="list-item"
@@ -53,13 +40,7 @@ const Todo = ({todo, onTodoToggle}: TodoProps) => {
                 </Tag>
             </div>
             <div>
-            <Button 
-                type="primary"
-                shape="circle"
-                icon={<DeleteOutlined />} 
-                onClick={() => deleteStatus(todo)}
-                className="todo-Delete"
-            />
+            
             </div>
         </List.Item>
     )
