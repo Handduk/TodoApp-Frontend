@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Tag, List, Switch, message, Button } from "antd";
-import { DeleteOutlined, MessageOutlined } from "@ant-design/icons";
+import { Tag, List, Switch, message, Button, Tooltip } from "antd";
+import { CheckOutlined, CloseOutlined, DeleteOutlined, MessageOutlined } from "@ant-design/icons";
 import { TodoProps } from "./Models/TodoProps";
 import { deleteTodoStatus, loadTodos, updateTodoStatus } from "../Services/todoServices";
 import { ITodo } from "./Models/todo";
 
-const Todo = ({todo}: TodoProps) => {
+const Todo = ({todo, onTodoToggle}: TodoProps) => {
     const [todos, setTodos] = useState([]);
     
     const refresh =async () => {
@@ -15,17 +15,7 @@ const Todo = ({todo}: TodoProps) => {
         });
     }
 
-    const handleStatus = async (todo: ITodo) => {
-        todo.completed = !todo.completed;
-        try{
-            await updateTodoStatus(todo);
-            refresh();
-            message.success(`Your todo is now ${todo.completed ? "completed!" : "incomplete"}`);
-            return todo;
-        } catch(error) {
-            console.error(error);
-        }
-    };
+    
 
     const deleteStatus = async (todo: ITodo) => {
         
@@ -42,6 +32,18 @@ const Todo = ({todo}: TodoProps) => {
     return(
         <List.Item
 
+        actions={[
+            <Tooltip
+                title={todo.completed ? `Mark as not completed` : `Mark as completed`}>
+                    <Switch
+                        checkedChildren={<CheckOutlined/>}
+                        unCheckedChildren={<CloseOutlined/>}
+                        onChange={() => onTodoToggle(todo)}
+                        defaultChecked={todo.completed}
+                        />
+                </Tooltip>  
+        ]}
+
         className="list-item"
         key={todo.id}
         >
@@ -49,15 +51,6 @@ const Todo = ({todo}: TodoProps) => {
                 <Tag color={todo.completed ? 'green' : 'red'} className="todo-tag">
                     {todo.title}
                 </Tag>
-            </div>
-            <div className="todo-check">
-                <Switch 
-                    onClick={() => handleStatus(todo)}
-                    checked={todo.completed}
-                    unCheckedChildren={todo.completed}
-                    defaultChecked
-                    className="todo-switch"
-                />
             </div>
             <div>
             <Button 
