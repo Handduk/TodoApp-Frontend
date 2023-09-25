@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Tag, List, Switch, message } from "antd";
+import { Tag, List, Switch, message, Button } from "antd";
+import { DeleteOutlined, MessageOutlined } from "@ant-design/icons";
 import { TodoProps } from "./Models/TodoProps";
-import { loadTodos, updateTodoStatus } from "../Services/todoServices";
+import { deleteTodoStatus, loadTodos, updateTodoStatus } from "../Services/todoServices";
 import { ITodo } from "./Models/todo";
 
 const Todo = ({todo}: TodoProps) => {
@@ -26,6 +27,18 @@ const Todo = ({todo}: TodoProps) => {
         }
     };
 
+    const deleteStatus = async (todo: ITodo) => {
+        
+        console.log("deleteStatus function called");
+        try {
+            await deleteTodoStatus(todo);
+            message.success(`The todo ${todo.title} was deleted.`);
+            refresh();
+        } catch(error) {
+            console.error(error);
+        } 
+    };
+
     return(
         <List.Item
 
@@ -37,15 +50,23 @@ const Todo = ({todo}: TodoProps) => {
                     {todo.title}
                 </Tag>
             </div>
-            {/**TODO: add function to complete todo tasks, also change color depending if the task is completed or not */}
             <div className="todo-check">
                 <Switch 
-                onClick={() => handleStatus(todo)}
-                checked={todo.completed}
-                unCheckedChildren={todo.completed}
-                defaultChecked
-                className="todo-switch"
+                    onClick={() => handleStatus(todo)}
+                    checked={todo.completed}
+                    unCheckedChildren={todo.completed}
+                    defaultChecked
+                    className="todo-switch"
                 />
+            </div>
+            <div>
+            <Button 
+                type="primary"
+                shape="circle"
+                icon={<DeleteOutlined />} 
+                onClick={() => deleteStatus(todo)}
+                className="todo-Delete"
+            />
             </div>
         </List.Item>
     )
