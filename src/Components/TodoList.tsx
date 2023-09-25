@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { createTodo, loadTodos, updateTodoStatus, deleteTodo } from '../Services/todoServices';
 import { ITodo } from './Models/todo';
 import TodoTab from './TodoTab';
+import { useMutation, useQuery, useQueryClient} from 'react-query';
+import { Divider } from 'rc-menu';
 
 
 const { TabPane } = Tabs;
@@ -13,49 +15,50 @@ const TodoList = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [todos, setTodos] = useState([]);
 
+    const queryClient = useQueryClient();
+
+    const { isLoading, isError, data} = useQuery("todos", loadTodos);
+
+    const createMutation = useMutation(createTodo, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("todos");
+            message.success("Your Todo has been added!");
+        }
+    })
+
+    const updateMutation = useMutation(updateTodoStatus, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("todos");
+            message.info("Todo updated!");
+        }
+    })
+
+    const deleteMutation = useMutation(deleteTodo, {
+        onSuccess: () => {
+            queryClient.invalidateQueries("todos")
+            message.warning("Todo deleted.");
+        },
+        onError: () => {
+            console.log("Error deleting todo");
+        }
+    })
+
     const handleFormSubmit = async (todo : ITodo) => {
-        await createTodo(todo);
-        onRefresh();
-        message.success('Your todo has been added!');
+        createMutation.mutate(todo);
     }
 
     const handleToggleTodoStatus = async (todo: ITodo) => {
         todo.completed = !todo.completed;
-        try{
-            await updateTodoStatus(todo);
-            refresh();
-            message.success(`Your todo is now ${todo.completed ? "completed!" : "incomplete"}`);
-            return todo;
-        } catch(error) {
-            console.error(error);
-        }
+        updateMutation.mutate(todo);
     }
 
     const handleRemoveTodo = async (todo: ITodo) => {
         
         if (typeof todo.id !== "undefined" && "id" in todo) {
-            await deleteTodo(todo.id);
-            onRefresh();
-            message.warning(`the todo ${todo.title} was deleted`);
+            deleteMutation.mutate(todo.id);
         } 
     }
 
-    const onRefresh = useCallback( async () => {
-        setRefreshing(true);
-        refresh();
-        setRefreshing(false);
-    }, [refreshing]);
-
-    const refresh =async () => {
-        await loadTodos()
-        .then (json => {
-            setTodos(json);
-        });
-    }
-
-    useEffect(() => {
-        refresh();
-    }, [onRefresh])
     return (
         <Layout>
             <Content style={{ padding: '10px 60px'}}>
@@ -67,7 +70,11 @@ const TodoList = () => {
                             <br />
                             <Tabs defaultActiveKey="all">
                                 <TabPane tab="All" key="all">
-                                <TodoTab todos={todos} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
+
+                                    {isLoading && <div>Loading todos from the server...</div>}
+
+                                    {isError && <div>Something went wrong</div>}
+                                <TodoTab todos={data} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
                                 </TabPane>
                             </Tabs>
                         </Col>
