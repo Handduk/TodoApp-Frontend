@@ -7,6 +7,7 @@ import { TodosFormProps } from './Models/TodosFromProps';
 const TodosForm: React.FC<TodosFormProps> = (props) => {
     const [form] = Form.useForm();
     const { onFormSubmit } = props;
+    
     const onFinish = () => {
         const todo: ITodo = {
             title: form.getFieldValue('title'),

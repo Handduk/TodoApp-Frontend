@@ -19,3 +19,9 @@ export const updateTodoStatus = (todo : ITodo) => {
         completed: !todo.completed,
     }).then(response => response.data);
 };
+
+export const deleteTodoStatus = (todo: ITodo) => {
+    console.log("deleteTodoStatus was executed");
+    return axios.delete(baseUrl + `/${todo.id}`)
+    .then(response => response.data);
+};
