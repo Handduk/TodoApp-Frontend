@@ -4,6 +4,6 @@ export type TodoProps = {
         title: string;
         completed: boolean;
     };
-    onTodoToggle: (todo: {id: number; title: string; completed: boolean}) => void;
+    onTodoToggle: (todo: { id: number; title: string; completed: boolean; }) => void;
     onTodoRemoval: (todo: { id: number; title: string; completed: boolean; }) => void;
 };

@@ -1,6 +1,7 @@
 import { Tag, List, Switch, Button, Tooltip, Popconfirm } from "antd";
 import { CheckOutlined, CloseOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TodoProps } from "./Models/TodoProps";
+import TodoEdit from "./TodoEdit";
 
 const Todo = ({todo, onTodoToggle, onTodoRemoval}: TodoProps) => {
     return(
@@ -16,6 +17,7 @@ const Todo = ({todo, onTodoToggle, onTodoRemoval}: TodoProps) => {
                         defaultChecked={todo.completed}
                         />
                 </Tooltip>,
+                <TodoEdit id={todo.id} title={todo.title} completed={todo.completed} />,
                 <Popconfirm
                 title={"Do you really want to delete?"}
                 onConfirm={() => {

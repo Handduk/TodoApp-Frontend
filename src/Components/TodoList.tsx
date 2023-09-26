@@ -1,19 +1,19 @@
 import {Col, Layout, message, Row, Tabs} from 'antd';
 import TodosForm from './TodosForm';
 import { useCallback, useEffect, useState } from 'react';
-import { createTodo, loadTodos, updateTodoStatus, deleteTodo } from '../Services/todoServices';
+import { createTodo, loadTodos, updateTodo, deleteTodo } from '../Services/todoServices';
 import { ITodo } from './Models/todo';
 import TodoTab from './TodoTab';
 import { useMutation, useQuery, useQueryClient} from 'react-query';
-import { Divider } from 'rc-menu';
 
+const baseUrl = `${process.env.REACT_APP_API_URL}/api/Todos`;
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
 
 const TodoList = () => {
     const [refreshing, setRefreshing] = useState(false);
-    const [todos, setTodos] = useState([]);
+    //const [todos, setTodos] = useState([]);
 
     const queryClient = useQueryClient();
 
@@ -26,7 +26,7 @@ const TodoList = () => {
         }
     })
 
-    const updateMutation = useMutation(updateTodoStatus, {
+    const updateMutation = useMutation(updateTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries("todos");
             message.info("Todo updated!");
@@ -55,6 +55,8 @@ const TodoList = () => {
     const handleRemoveTodo = async (todo: ITodo) => {
         
         if (typeof todo.id !== "undefined" && "id" in todo) {
+            console.log("URL to be deleted:", `${baseUrl}/${todo.id}`); // Log the URL
+            console.log("Todo ID to be deleted:", todo.id); // Log the todo.id
             deleteMutation.mutate(todo.id);
         } 
     }
