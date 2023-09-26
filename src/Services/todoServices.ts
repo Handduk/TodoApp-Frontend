@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ITodo } from "../Components/Models/todo";
 const baseUrl = `${process.env.REACT_APP_API_URL}/api/Todos`;
 
 export const createTodo = (todo: { title: string; completed: boolean; }) => {
@@ -14,13 +13,15 @@ export const loadTodos = () => {
     .then(response => response.data);
 }
 
-export const updateTodoStatus = (todo : ITodo) => {
-    return axios.put(baseUrl + `/${todo.id}`, {
-        completed: !todo.completed,
+export const updateTodo = (todo: { id?: number; title: string; completed: boolean; }) => {
+    return axios.put(`${baseUrl}/${todo.id}`, {
+      id: todo.id,
+      title: todo.title,
+      completed: todo.completed
     }).then(response => response.data);
-};
+  }
 
 export const deleteTodo = (id: number) => {
-    return axios.delete(baseUrl + `/${id}`)
+    return axios.delete(`${baseUrl}/${id}`)
     .then(response => response.data);
 };

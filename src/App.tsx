@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.scss';
-import './Components/TodoList';
 import TodoList from './Components/TodoList';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
