@@ -12,12 +12,17 @@ const { TabPane } = Tabs;
 const { Content } = Layout;
 
 const TodoList = () => {
-    const [refreshing, setRefreshing] = useState(false);
-    //const [todos, setTodos] = useState([]);
+    const [activeTodos, setActiveTodos] = useState([]);
+    const [completedTodos, setCompletedTodos] = useState([]);
 
     const queryClient = useQueryClient();
 
-    const { isLoading, isError, data} = useQuery("todos", loadTodos);
+    const { isLoading, isError, data} = useQuery("todos", async () => {
+        const data = await loadTodos();
+        setActiveTodos(data.filter((todo : ITodo) => todo.completed === false));
+        setCompletedTodos(data.filter((todo : ITodo) => todo.completed === true));
+        return data;
+    });
 
     const createMutation = useMutation(createTodo, {
         onSuccess: () => {
@@ -55,8 +60,6 @@ const TodoList = () => {
     const handleRemoveTodo = async (todo: ITodo) => {
         
         if (typeof todo.id !== "undefined" && "id" in todo) {
-            console.log("URL to be deleted:", `${baseUrl}/${todo.id}`); // Log the URL
-            console.log("Todo ID to be deleted:", todo.id); // Log the todo.id
             deleteMutation.mutate(todo.id);
         } 
     }
@@ -70,13 +73,19 @@ const TodoList = () => {
                             <h1>Todo List</h1>
                             <TodosForm onFormSubmit={handleFormSubmit} />
                             <br />
+
+                            {isLoading && <div>Loading todos from the server...</div>}
+                            {isError && <div>Something went wrong</div>}
+
                             <Tabs defaultActiveKey="all">
                                 <TabPane tab="All" key="all">
-
-                                    {isLoading && <div>Loading todos from the server...</div>}
-
-                                    {isError && <div>Something went wrong</div>}
-                                <TodoTab todos={data} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
+                                    <TodoTab todos={data} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
+                                </TabPane>
+                                <TabPane tab="In Progress" key="active">
+                                    <TodoTab todos={activeTodos} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
+                                </TabPane>
+                                <TabPane tab="Completed" key="complete">
+                                    <TodoTab todos={completedTodos} onTodoToggle = {handleToggleTodoStatus} onTodoRemoval = {handleRemoveTodo}/>
                                 </TabPane>
                             </Tabs>
                         </Col>
