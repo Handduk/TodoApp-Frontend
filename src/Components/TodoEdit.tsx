@@ -25,7 +25,6 @@ const TodoEdit = (todo : ITodo) => {
         if (editedTodo.title != null) {
             await updateTodo(editedTodo);
             queryClient.invalidateQueries("todos");
-            message.info("Todo updated!");
         }
         else {
             message.warning("Your todo has not been updated.");
@@ -38,14 +37,14 @@ const TodoEdit = (todo : ITodo) => {
 
     return (
         <>
-        <Button onClick={showModal}>
+        <Button onClick={showModal} className="edit-button">
             <EditOutlined/>
         </Button>
         <Modal title="Edit" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <Form
             form={form}
             initialValues={ todo }>
-                <Form.Item name={"title"}>
+                <Form.Item name={'title'}>
                     <Input value={todo.title} /> 
                 </Form.Item>
             </Form>

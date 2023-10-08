@@ -1,12 +1,11 @@
-import {Col, Layout, message, Row, Tabs} from 'antd';
-import TodosForm from './TodosForm';
-import { useCallback, useEffect, useState } from 'react';
-import { createTodo, loadTodos, updateTodo, deleteTodo } from '../Services/todoServices';
+import { Col, Layout, message, Row, Tabs } from 'antd';
+import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { createTodo, deleteTodo, loadTodos, updateTodo } from '../Services/todoServices';
 import { ITodo } from './Models/todo';
+import TodosForm from './TodosForm';
 import TodoTab from './TodoTab';
-import { useMutation, useQuery, useQueryClient} from 'react-query';
-
-const baseUrl = `${process.env.REACT_APP_API_URL}/api/Todos`;
+import React from 'react';
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
