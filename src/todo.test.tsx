@@ -22,7 +22,20 @@ test('check if deletebutton has been clicked', () => {
   
     const deleteButton = getByRole('button', {name: 'delete'});
 
-    expect(deleteButton).toBeTruthy();
+    expect(deleteButton);
     fireEvent.click(deleteButton);
 
 });
+
+test('check if completeswitch has been toggled', () => {
+
+    const { getByRole } = render (
+      <Todo todo={todo} onTodoToggle={mockOntodoToggle} onTodoRemoval={mockOnTodoRemoval}/>
+    );
+    
+      const toggleSwitch = getByRole('switch');
+  
+      expect(toggleSwitch);
+      fireEvent.click(toggleSwitch);
+  
+  });
