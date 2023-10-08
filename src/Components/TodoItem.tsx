@@ -2,6 +2,8 @@ import { Tag, List, Switch, Button, Tooltip, Popconfirm } from "antd";
 import { CheckOutlined, CloseOutlined, DeleteOutlined } from "@ant-design/icons";
 import { TodoProps } from "./Models/TodoProps";
 import TodoEdit from "./TodoEdit";
+import './item.scss';
+import React from "react";
 
 const Todo = ({todo, onTodoToggle, onTodoRemoval}: TodoProps) => {
     return(
@@ -11,6 +13,7 @@ const Todo = ({todo, onTodoToggle, onTodoRemoval}: TodoProps) => {
             <Tooltip
                 title={todo.completed ? `Mark as not completed` : `Mark as completed`}>
                     <Switch
+                        className="todo-Switch"
                         checkedChildren={<CheckOutlined/>}
                         unCheckedChildren={<CloseOutlined/>}
                         onChange={() => onTodoToggle(todo)}
